@@ -36,6 +36,14 @@
     recurse=yes
   when: consul_ui_was_downloaded|changed
 
+- name: remove default nginx config
+  file: >
+    path=/etc/nginx/sites-enabled/default
+    state=absent
+  when: consul_install_nginx_config and ansible_os_family == "Debian" and consul_ui_server_name is not defined
+  notify:
+    - consul reload nginx
+
 - name: consul nginx config
   template: >
     src={{consul_ui_nginx_template}}
@@ -78,4 +86,4 @@
 
 - name: allow nginx to connect to consul (selinux)
   seboolean: name=httpd_can_network_connect state=yes persistent=yes
-  when: consul_is_ui and consul_install_nginx_config and ansible_selinux is defined and ansible_selinux.status == 'enabled'
+  when: consul_is_ui and consul_install_nginx_config and ansible_selinux.status is defined and ansible_selinux.status == "enabled"
