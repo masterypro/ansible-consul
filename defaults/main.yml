@@ -78,7 +78,7 @@ consul_leave_on_terminate: false
 
 consul_join_at_start: false
 consul_retry_join: false
-consul_retry_interval: 30s
+consul_retry_interval: 1s
 consul_retry_max: 0
 
 consul_servers_wan: []
@@ -117,7 +117,6 @@ consul_dnsmasq:
   upstream_servers:
     - 8.8.8.8
     - 8.8.4.4
-consul_node_name: "{{ inventory_hostname }}"
 # Set to true to enable hostname verification via TLS
 consul_verify_server_hostname: false
 consul_cors_support: false

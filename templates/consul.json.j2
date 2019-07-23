@@ -7,18 +7,18 @@
   {% endif %}
 {% endif %}
 {% if consul_join_at_start is defined and consul_join_at_start %}
-  "start_join": [{% for host in consul_servers | difference(ansible_all_ipv4_addresses) %}"{{host}}"{% if not loop.last %}, {% endif %}{% endfor %}],
+  "start_join": [{% for host in consul_servers | difference(ansible_host) %}"{{host}}"{% if not loop.last %}, {% endif %}{% endfor %}],
 {% endif %}
 {% if consul_retry_join|default(false) %}
-  "retry_join": [{% for host in consul_servers | difference(ansible_all_ipv4_addresses) %}"{{host}}"{% if not loop.last %}, {% endif %}{% endfor %}],
+  "retry_join": [{% for host in consul_servers | difference(ansible_host) %}"{{host}}"{% if not loop.last %}, {% endif %}{% endfor %}],
   "retry_interval": "{{ consul_retry_interval }}",
   "retry_max": {{ consul_retry_max }},
 {% endif %}
 {% if consul_join_wan|default(false) %}
-  "start_join_wan": [{% for host in consul_servers_wan | difference(ansible_all_ipv4_addresses) %}"{{host}}"{% if not loop.last %}, {% endif %}{% endfor %}],
+  "start_join_wan": [{% for host in consul_servers_wan | difference(ansible_host) %}"{{host}}"{% if not loop.last %}, {% endif %}{% endfor %}],
 {% endif %}
 {% if consul_retry_join_wan|default(false) %}
-  "retry_join_wan": [{% for host in consul_servers_wan | difference(ansible_all_ipv4_addresses) %}"{{host}}"{% if not loop.last %}, {% endif %}{% endfor %}],
+  "retry_join_wan": [{% for host in consul_servers_wan | difference(ansible_host) %}"{{host}}"{% if not loop.last %}, {% endif %}{% endfor %}],
   "retry_interval_wan": "{{ consul_retry_interval_wan }}",
   "retry_max_wan": {{ consul_retry_max_wan }},
 {% endif %}
@@ -53,12 +53,13 @@
   "node_name": "{{ consul_node_name }}",
 {% endif %}
   "server": {{ "true" if consul_is_server else "false" }},
-{% if consul_client_address_bind and consul_client_address is defined and consul_client_address is not none %}
   "client_addr": "{{ consul_client_address }}",
   "addresses" : {
-    "rpc": "127.0.0.1"
+    {% if consul_version | version_compare('0.8.3', '<') %}
+    "rpc": "{{ consul_rpc_address }}",
+    {% endif %}
+    "http": "{{ consul_http_address }}"
   },
-{% endif %}
 {% if consul_dynamic_bind == false and consul_bind_address is defined and consul_bind_address is not none %}
   "bind_addr": "{{ consul_bind_address }}",
 {% endif %}
@@ -102,7 +103,9 @@
     "dns": {{ consul_port_dns }},
     "http": {{ consul_port_http }},
     "https": {{ consul_port_https }},
+    {% if consul_version | version_compare('0.8.3', '<') %}
     "rpc": {{ consul_port_rpc }},
+    {% endif %}
     "serf_lan": {{ consul_port_serf_lan }},
     "serf_wan": {{ consul_port_serf_wan }},
     "server": {{ consul_port_server }}
@@ -150,9 +153,11 @@
   },
 {% endif %}
 {% if consul_cors_support is defined %}
-  "http_api_response_headers": {
-        "Access-Control-Allow-Origin": "*"
-  },
+  "http_config": {
+        "response_headers": {
+          "Access-Control-Allow-Origin": "*"
+        }
+      },
 {% endif %}
 {% if consul_skip_leave_on_interrupt is defined %}
   "skip_leave_on_interrupt": {{ "true" if consul_skip_leave_on_interrupt else "false" }},

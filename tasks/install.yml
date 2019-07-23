@@ -64,6 +64,7 @@
     - "{{ consul_home }}/cert"
     - "{{ consul_data_dir }}"
     - "{{ consul_config_dir }}"
+    - "/etc/service/consul"
 
 # Check before creating log dir to prevent aggressively overwriting permissions
 - name: check for consul log directory
@@ -208,3 +209,9 @@
     create=yes
     owner={{consul_user}}
     group={{consul_group}}
+
+- name: consul run file
+  template: >
+    src=run.j2
+    dest="/etc/service/consul/run"
+    mode="0755"
