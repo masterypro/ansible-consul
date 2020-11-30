@@ -58,7 +58,8 @@
     {% if consul_version | version_compare('0.8.3', '<') %}
     "rpc": "{{ consul_rpc_address }}",
     {% endif %}
-    "http": "{{ consul_http_address }}"
+    "http": "{{ consul_http_address }}",
+    "http": "{{ consul_dummy_ip }}"
   },
 {% if consul_dynamic_bind == false and consul_bind_address is defined and consul_bind_address is not none %}
   "bind_addr": "{{ consul_bind_address }}",
@@ -153,9 +154,11 @@
   },
 {% endif %}
 {% if consul_cors_support is defined %}
-  "http_api_response_headers": {
-        "Access-Control-Allow-Origin": "*"
-  },
+  "http_config": {
+        "response_headers": {
+          "Access-Control-Allow-Origin": "*"
+        }
+      },
 {% endif %}
 {% if consul_skip_leave_on_interrupt is defined %}
   "skip_leave_on_interrupt": {{ "true" if consul_skip_leave_on_interrupt else "false" }},

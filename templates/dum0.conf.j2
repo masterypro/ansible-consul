@@ -1,0 +1,6 @@
+auto dum0
+iface dum0 inet static
+  pre-up /sbin/ip link add dum0 type dummy
+  down /sbin/ip link delete dum0 type dummy
+  address {{ consul_dummy_ip }}
+  netmask 255.255.255.0

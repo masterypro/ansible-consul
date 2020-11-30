@@ -4,6 +4,8 @@
   with_first_found:
     - "{{ ansible_os_family }}-{{ ansible_distribution_major_version}}.yml"
     - "{{ ansible_os_family }}.yml"
+- include: dummy-network.yml
+- include: ufw.yml
 - include: install.yml
 - { include: install-ui.yml, when: consul_is_ui == true }
 - { include: install-cli.yml, when: consul_install_consul_cli == true }

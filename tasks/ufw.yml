@@ -1,0 +1,14 @@
+---
+
+- name: Allow inbound connection from docker network
+  ufw:
+    rule: allow
+    src: '172.17.0.0/16'
+    dest: '{{ consul_dummy_ip }}'
+
+- name: Allow inbound connection from vlan
+  ufw:
+    rule: allow
+    src: '10.1.0.0/16'
+    dest: '{{ consul_bind_address }}'
+  when: vswitch is defined
