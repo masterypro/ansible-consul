@@ -76,9 +76,15 @@ consul_syslog: false
 consul_rejoin_after_leave: true
 consul_leave_on_terminate: false
 
+<<<<<<< HEAD
 consul_join_at_start: true
 consul_retry_join: true
 consul_retry_interval: 30s
+=======
+consul_join_at_start: false
+consul_retry_join: false
+consul_retry_interval: 1s
+>>>>>>> 139abd4cc25e1cb5ec67702851cfaac551c6c0b6
 consul_retry_max: 0
 
 consul_servers_wan: []
@@ -116,7 +122,6 @@ consul_dnsmasq:
   upstream_servers:
     - 8.8.8.8
     - 8.8.4.4
-
 #consul_node_name: "{{ ansible_hostname }}"
 # Set to true to enable hostname verification via TLS
 consul_verify_server_hostname: false
@@ -129,4 +134,7 @@ consul_disable_update_check: false
 consul_services: {}
 consul_services_mode: 0640
 
+<<<<<<< HEAD
 consul_http_address: "{{consul_dummy_ip}}"
+=======
+>>>>>>> 139abd4cc25e1cb5ec67702851cfaac551c6c0b6
