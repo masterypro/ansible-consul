@@ -1,6 +1,6 @@
 {
 {% if consul_is_ui == true %}
-  {% if consul_version | version_compare('0.6.1', '<') %}
+  {% if consul_version is version('0.6.1', '<') %}
     "ui_dir": "{{ consul_ui_dir }}",
   {% else %}
     "ui": true,
@@ -55,7 +55,7 @@
   "server": {{ "true" if consul_is_server else "false" }},
   "client_addr": "{{ consul_client_address }}",
   "addresses" : {
-    {% if consul_version | version_compare('0.8.3', '<') %}
+    {% if consul_version is version('0.8.3', '<') %}
     "rpc": "{{ consul_rpc_address }}",
     {% endif %}
     "http": "{{ consul_http_address }}",
@@ -104,7 +104,7 @@
     "dns": {{ consul_port_dns }},
     "http": {{ consul_port_http }},
     "https": {{ consul_port_https }},
-    {% if consul_version | version_compare('0.8.3', '<') %}
+    {% if consul_version is version('0.8.3', '<') %}
     "rpc": {{ consul_port_rpc }},
     {% endif %}
     "serf_lan": {{ consul_port_serf_lan }},
